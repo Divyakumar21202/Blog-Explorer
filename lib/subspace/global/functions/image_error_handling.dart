@@ -3,10 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 Widget imageErrorBuilder(
     BuildContext context, String error, Object? stackTrace) {
-  return Center(
+  return ConstrainedBox(
+    constraints: BoxConstraints(
+      maxHeight: MediaQuery.of(context).size.height * 0.3,
+    ),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        const Spacer(),
         const Icon(
           Icons.broken_image,
           color: Colors.orangeAccent,
@@ -29,7 +33,8 @@ Widget imageErrorBuilder(
             color: Colors.black54,
           ),
         ),
-        const SizedBox(height: 16),
+        const Spacer(),
+
         // ElevatedButton(
         //   onPressed: () {
         //     // Implement a retry mechanism or any other action

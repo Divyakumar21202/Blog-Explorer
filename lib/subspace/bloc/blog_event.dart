@@ -1,7 +1,13 @@
 part of 'blog_bloc.dart';
 
-sealed class BlogEvent  {
+sealed class BlogEvent {}
+
+final class FetchingBlogEvent extends BlogEvent {}
+
+final class LikingBlogEvent extends BlogEvent {
+  final String blogId;
+
+  LikingBlogEvent({
+    required this.blogId,
+  });
 }
-
-
-final class FetchingBlogEvent extends BlogEvent{}

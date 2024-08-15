@@ -1,8 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:subspace/subspace/bloc/blog_bloc.dart';
+import 'package:subspace/subspace/features/Blog%20Article/widgets/heart_button.dart';
 import 'package:subspace/subspace/features/Blog%20Article/widgets/shimmer_widget.dart';
+import 'package:subspace/subspace/global/functions/image_error_handling.dart';
 
 import '../models/blog_model.dart';
 
@@ -34,38 +38,39 @@ class BlogDetailView extends StatelessWidget {
                         ? Image(
                             image: cachedImageProvider!,
                             fit: BoxFit.fill,
-                            height: MediaQuery.of(context).size.height * 0.3,
+                            height: MediaQuery.of(context).size.height * 0.4,
                             width: double.infinity,
+                            errorBuilder: (context, error, stackTrace) =>
+                                imageErrorBuilder(context, 'error', stackTrace),
                           )
                         : CachedNetworkImage(
                             imageUrl: blog.imageUrl,
                             fit: BoxFit.fill,
-                            // errorBuilder: imageErrorBuilder,
                             cacheManager: CacheManager(
                               Config(
                                 blog.imageUrl,
-                                stalePeriod:
-                                    const Duration(days: 7), // Cache for 7 days
-                                maxNrOfCacheObjects:
-                                    500, // Limit to 100 cached objects
+                                stalePeriod: const Duration(days: 7),
+                                maxNrOfCacheObjects: 500,
                               ),
                             ),
                             imageBuilder: (context, _) => ShimmerEffect(
                               child: Card(
-                                color: Colors.grey[
-                                    850], // Darker background for the card
+                                color: Colors.grey[850],
                                 child: Container(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.3,
+                                      MediaQuery.of(context).size.height * 0.4,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    color: Colors.grey[
-                                        900], // Even darker color for the shimmer base
+                                    color: Colors.grey[900],
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                 ),
                               ),
                             ),
+                            errorWidget: imageErrorBuilder,
+                            // errorWidget: (context, url, stk) {
+                            //   return const SizedBox();
+                            // },
                           ),
                   ),
                   DecoratedBox(
@@ -91,46 +96,11 @@ class BlogDetailView extends StatelessWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.share, color: Colors.white),
-                onPressed: () {
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.favorite_border, color: Colors.white),
-                onPressed: () {
-                },
+                onPressed: () {},
               ),
             ],
           ),
           SliverToBoxAdapter(
-            //   child: Padding(
-            //     // padding: const EdgeInsets.all(16.0),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            // const SizedBox(height: 16),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     IconButton(
-            //       icon: Icon(
-            //         Icons.favorite_border,
-            //         color: Theme.of(context).primaryColor,
-            //       ),
-            //       onPressed: () {
-            //         // Implement like/unlike functionality
-            //       },
-            //     ),
-            //     IconButton(
-            //       icon: Icon(
-            //         Icons.share,
-            //         color: Theme.of(context).primaryColor,
-            //       ),
-            //       onPressed: () {
-            //         // Implement share functionality
-            //       },
-            //     ),
-            //   ],
-            // ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: Text(
@@ -142,10 +112,27 @@ class BlogDetailView extends StatelessWidget {
                 ),
               ),
             ),
-            //     ],
-            //   ),
-            // ),
           ),
+          SliverToBoxAdapter(
+            child: BlocBuilder<BlogBloc, BlogState>(builder: (context, state) {
+              bool isLike = blog.isLiked;
+              if (state is BlogSuccessState) {
+                isLike =
+                    state.blogList.firstWhere((b) => b.id == blog.id).isLiked;
+              }
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                child: HeartButton(
+                    isSelected: isLike,
+                    onPressed: () {
+                      context
+                          .read<BlogBloc>()
+                          .add(LikingBlogEvent(blogId: blog.id));
+                    }),
+              );
+            }),
+          )
         ],
       ),
     );

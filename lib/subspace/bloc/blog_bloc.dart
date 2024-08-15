@@ -14,50 +14,59 @@ part 'blog_state.dart';
 class BlogBloc extends Bloc<BlogEvent, BlogState> {
   BlogBloc() : super(BlogInitialState()) {
     on<FetchingBlogEvent>((event, emit) async {
-       emit(BlogLoadingState());
-      final b = await Hive.openBox<Blog>('blogBox');
-     
+      emit(BlogLoadingState());
+      final b = await Hive.openBox<Blog>(LocalStorageService.blogBox);
+
       final blogList = LocalStorageService.getBlogList(box: b);
-      if(blogList.isNotEmpty){
+      if (blogList.isNotEmpty) {
         return emit(BlogSuccessState(blogList: blogList));
-      }
-     else{ try {
-        final response = await fetchBlogs();
-        if (response.statusCode == 200) {
-          final box = await Hive.openBox<Blog>('blogBox');
-          final list = jsonDecode(response.body)['blogs'];
-          final List<Blog> blogList = [];
-          for (final model in list) {
-            final blog = Blog.fromMap(model);
-            blogList.add(blog);
-            LocalStorageService.storeDataLocally(blog: blog, box: box);
+      } else {
+        try {
+          final response = await fetchBlogs();
+          if (response.statusCode == 200) {
+            final box = await Hive.openBox<Blog>(LocalStorageService.blogBox);
+            final list = jsonDecode(response.body)['blogs'];
+            for (final model in list) {
+              final blog = Blog.fromMap(model);
+              blogList.add(blog);
+              LocalStorageService.storeDataLocally(blog: blog, box: box);
+            }
+            emit(BlogSuccessState(blogList: blogList));
+            return;
+          } else {
+            emit(BlogFailureState(
+                failure:
+                    "We encountered an issue while fetching the data.\nPlease try again later."));
           }
-
-          emit(BlogSuccessState(blogList: blogList));
-
-          print(
-              "List of blog length is : ${LocalStorageService.getBlogList(box: b).length}");
-
-          // emit(BlogSuccessState(blogList: LocalStorageService.getBlogList(box: box)));
-          return;
-        } else {
-          emit(BlogFailureState(
+        } on SocketException {
+          return emit(BlogFailureState(
               failure:
-                  "We encountered an issue while fetching the data.\nPlease try again later."));
+                  "Connection error.\nPlease check your network and try again."));
+        } on ClientException {
+          return emit(BlogFailureState(
+              failure:
+                  "Connection error.\nPlease check your network and try again."));
+        } catch (e) {
+          return emit(BlogFailureState(
+              failure: "An unexpected error occurred.\nPlease try again."));
         }
-      } on SocketException {
-      return  emit(BlogFailureState(
-            failure:
-                "Connection error.\nPlease check your network and try again."));
-      } on ClientException {
-       return  emit(BlogFailureState(
-            failure:
-                "Connection error.\nPlease check your network and try again."));
-      } catch (e) {
-       return emit(BlogFailureState(
-            failure: "An unexpected error occurred.\nPlease try again."));
-      }}
-    
+      }
+    });
+    on<LikingBlogEvent>((event, emit) async {
+      final box = Hive.box<Blog>(LocalStorageService.blogBox);
+
+      Blog? blog = box.get(event.blogId);
+      if (blog != null) {
+        if (blog.isLiked) {
+          blog = blog.copyWith(isLiked: false);
+        } else {
+          blog = blog.copyWith(isLiked: true);
+        }
+        await LocalStorageService.updateBlog(box: box, blog: blog);
+        emit(BlogSuccessState(
+            blogList: LocalStorageService.getBlogList(box: box)));
+        return;
+      }
     });
   }
 }

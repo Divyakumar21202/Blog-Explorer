@@ -45,7 +45,6 @@ class BlogCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorListener: (value) {} ,
                   errorWidget: imageErrorBuilder,
-                  // errorBuilder: (_, st, s) => const SizedBox(height: 200),
                   cacheManager: CacheManager(
                     Config(
                       blog.imageUrl,
@@ -79,6 +78,7 @@ class BlogCard extends StatelessWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
+
                   ),
                   maxLines: 2,
                 ),

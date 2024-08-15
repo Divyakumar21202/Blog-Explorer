@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:hive/hive.dart';
 
 part 'blog_model.g.dart';
@@ -20,6 +21,7 @@ class Blog {
     required this.title,
     required this.id,
     required this.imageUrl,
+    this.isLiked =false,
   });
 
   Map<String, dynamic> toMap() {
@@ -35,6 +37,20 @@ class Blog {
       title: map['title'] as String,
       id: map['id'] as String,
       imageUrl: map['image_url'] as String,
+    );
+  }
+
+  Blog copyWith({
+    String? id,
+    String? title,
+    String? imageUrl,
+    bool? isLiked,
+  }) {
+    return Blog(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      imageUrl: imageUrl ?? this.imageUrl,
+      isLiked: isLiked ?? this.isLiked,
     );
   }
 }
