@@ -34,12 +34,9 @@ Widget imageErrorBuilder(
           ),
         ),
         const Spacer(),
-
         // ElevatedButton(
-        //   onPressed: () {
-        //     // Implement a retry mechanism or any other action
-        //   },
-        //   style: ElevatedButton.styleFrom(
+        //   onPressed: null,
+        //  style: ElevatedButton.styleFrom(
         //     backgroundColor: Colors.orangeAccent,
         //     foregroundColor: Colors.white,
         //     shape: RoundedRectangleBorder(

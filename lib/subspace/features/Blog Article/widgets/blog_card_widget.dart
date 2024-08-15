@@ -15,8 +15,7 @@ class BlogCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final cachedImageProvider = CachedNetworkImageProvider(blog.imageUrl);
-
+    final cachedImageProvider = CachedNetworkImageProvider(blog.imageUrl);
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
@@ -29,27 +28,38 @@ class BlogCard extends StatelessWidget {
         );
       },
       child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        margin: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 8,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            16,
+          ),
+        ),
         elevation: 8,
         child: Stack(
           children: [
             Hero(
               tag: 'blog_image_${blog.id}',
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(
+                  16,
+                ),
                 child: CachedNetworkImage(
                   imageUrl: blog.imageUrl,
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorListener: (value) {} ,
+                  errorListener: (value) {},
                   errorWidget: imageErrorBuilder,
                   cacheManager: CacheManager(
                     Config(
                       blog.imageUrl,
-                      stalePeriod: const Duration(days: 7), 
-                      maxNrOfCacheObjects: 500, 
+                      stalePeriod: const Duration(
+                        days: 7,
+                      ),
+                      maxNrOfCacheObjects: 500,
                     ),
                   ),
                 ),
@@ -64,13 +74,21 @@ class BlogCard extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
-                    colors: [Colors.black.withOpacity(0.8), Colors.transparent],
+                    colors: [
+                      Colors.black.withOpacity(0.8),
+                      Colors.transparent,
+                    ],
                   ),
-                  borderRadius:
-                      const BorderRadius.vertical(bottom: Radius.circular(16)),
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(
+                      16,
+                    ),
+                  ),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 child: Text(
                   blog.title,
                   style: const TextStyle(
@@ -78,7 +96,6 @@ class BlogCard extends StatelessWidget {
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-
                   ),
                   maxLines: 2,
                 ),

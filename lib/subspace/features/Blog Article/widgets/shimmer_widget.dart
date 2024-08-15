@@ -6,7 +6,7 @@ class ShimmerEffect extends StatefulWidget {
   const ShimmerEffect({required this.child, super.key});
 
   @override
-  _ShimmerEffectState createState() => _ShimmerEffectState();
+  State<ShimmerEffect> createState() => _ShimmerEffectState();
 }
 
 class _ShimmerEffectState extends State<ShimmerEffect>
@@ -64,16 +64,25 @@ class BlogCardShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 8,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          16,
+        ),
+      ),
       elevation: 8,
-      color: Colors.grey[850], // Darker background for the card
+      color: Colors.grey[850],
       child: Container(
         height: 200,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.grey[900], // Even darker color for the shimmer base
-          borderRadius: BorderRadius.circular(16),
+          color: Colors.grey[900], 
+          borderRadius: BorderRadius.circular(
+            16,
+          ),
         ),
         child: const Center(
           child: CupertinoActivityIndicator(),

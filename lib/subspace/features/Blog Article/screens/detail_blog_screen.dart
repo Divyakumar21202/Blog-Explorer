@@ -19,7 +19,7 @@ class BlogDetailView extends StatelessWidget {
     super.key,
     required this.cachedImageProvider,
   });
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +41,11 @@ class BlogDetailView extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * 0.4,
                             width: double.infinity,
                             errorBuilder: (context, error, stackTrace) =>
-                                imageErrorBuilder(context, 'error', stackTrace),
+                                imageErrorBuilder(
+                              context,
+                              'error',
+                              stackTrace,
+                            ),
                           )
                         : CachedNetworkImage(
                             imageUrl: blog.imageUrl,
@@ -49,7 +53,9 @@ class BlogDetailView extends StatelessWidget {
                             cacheManager: CacheManager(
                               Config(
                                 blog.imageUrl,
-                                stalePeriod: const Duration(days: 7),
+                                stalePeriod: const Duration(
+                                  days: 7,
+                                ),
                                 maxNrOfCacheObjects: 500,
                               ),
                             ),
@@ -62,15 +68,14 @@ class BlogDetailView extends StatelessWidget {
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: Colors.grey[900],
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(
+                                      16,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                             errorWidget: imageErrorBuilder,
-                            // errorWidget: (context, url, stk) {
-                            //   return const SizedBox();
-                            // },
                           ),
                   ),
                   DecoratedBox(
@@ -90,19 +95,28 @@ class BlogDetailView extends StatelessWidget {
             ),
             backgroundColor: Colors.transparent,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
               onPressed: () => Navigator.pop(context),
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.share, color: Colors.white),
+                icon: const Icon(
+                  Icons.share,
+                  color: Colors.white,
+                ),
                 onPressed: () {},
               ),
             ],
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
+              ),
               child: Text(
                 blog.title,
                 style: GoogleFonts.merriweather(
@@ -114,24 +128,31 @@ class BlogDetailView extends StatelessWidget {
             ),
           ),
           SliverToBoxAdapter(
-            child: BlocBuilder<BlogBloc, BlogState>(builder: (context, state) {
-              bool isLike = blog.isLiked;
-              if (state is BlogSuccessState) {
-                isLike =
-                    state.blogList.firstWhere((b) => b.id == blog.id).isLiked;
-              }
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: HeartButton(
+            child: BlocBuilder<BlogBloc, BlogState>(
+              builder: (context, state) {
+                bool isLike = blog.isLiked;
+                if (state is BlogSuccessState) {
+                  isLike =
+                      state.blogList.firstWhere((b) => b.id == blog.id).isLiked;
+                }
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+                  child: HeartButton(
                     isSelected: isLike,
                     onPressed: () {
-                      context
-                          .read<BlogBloc>()
-                          .add(LikingBlogEvent(blogId: blog.id));
-                    }),
-              );
-            }),
+                      context.read<BlogBloc>().add(
+                            LikingBlogEvent(
+                              blogId: blog.id,
+                            ),
+                          );
+                    },
+                  ),
+                );
+              },
+            ),
           )
         ],
       ),
