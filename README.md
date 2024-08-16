@@ -1,5 +1,9 @@
 # Blog Explorer 
 
+
+# *Download Apk* : <a href="https://github.com/Divyakumar21202/Blog-Explorer/releases/download/1.0.0/app-release.apk">Android Here</a>
+
+
 ## How to setup/run the project locally :
 
 ### Step 1 : Setup. env
