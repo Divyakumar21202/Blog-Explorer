@@ -1,16 +1,25 @@
-# subspace
+# Blog Explorer 
 
-A new Flutter project.
+## How to setup/run the project locally :
 
-## Getting Started
+### Step 1 : Setup. env
+Make the .env file at the root of the project.
 
-This project is a starting point for a Flutter application.
+### Step 2 : Set api and secrets in .env
+Set the important API url and adminsecrets in .env file.
 
-A few resources to get you started if this is your first Flutter project:
+For example: url = "needed url"
+             adminsecret = "needed secret"
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Step 3 : Get Flutter packages
+Get the necessary packages needed for the project, by running:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**flutter pub get**
+
+### Step 4 : Run the project 
+Now ,you can run the project locally by running the following command:
+
+**flutter run**
+
+
+### If you got any issues regarding to setup/run the app ,please create the issue at the issue page of this project.
